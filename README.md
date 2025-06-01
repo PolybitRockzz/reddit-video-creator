@@ -6,12 +6,12 @@
 
 ## Table of Contents
 
-- Description
-- Requirements
-- Installation Guide
-- Explanation
-- Contributors
-- License
+- [Description](#description)
+- [Requirements](#requirements)
+- [Installation Guide](#installation-guide)
+- [Explanation](#explanation)
+- [Contributors](#contributors)
+- [License](#license)
 
 ## Description
 
