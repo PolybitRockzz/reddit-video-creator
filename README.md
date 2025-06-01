@@ -31,6 +31,8 @@ In order to install all the core dependencies of the system, use the following c
 pip install virtualenv
 ```
 
+And then the following commands based on your operating system.
+
 ### Windows
 
 ```
