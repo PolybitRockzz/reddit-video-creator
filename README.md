@@ -29,7 +29,7 @@ This project requires the following requirements to be pre-installed in the syst
 
 In order to install all the core dependencies of the system, use the following commands:
 
-```
+```powershell
 pip install virtualenv
 ```
 
@@ -37,7 +37,7 @@ And then the following commands based on your operating system.
 
 ### Windows
 
-```
+```powershell
 python -m venv env
 env/Scripts/Activate.ps1 # Powershell (otherwise, use env/Scripts/activate.bat)
 ```
