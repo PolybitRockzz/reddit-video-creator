@@ -150,25 +150,13 @@ def validate_config_file():
                 "video": {
                     "output_directory": "output/",
                     "resolution": "1080p",
-                    "fps": 30,
-                    "duration_limit": 300,
-                    "background_music": True,
-                    "voice_synthesis": "gtts"
+                    "fps": 60
                 },
                 "text_to_speech": {
+                    "service": "pyttsx3",
                     "voice": "en",
                     "speed": 1.0,
                     "volume": 0.8
-                },
-                "processing": {
-                    "max_concurrent_downloads": 3,
-                    "temp_directory": "temp/",
-                    "cleanup_after_processing": True
-                },
-                "ui": {
-                    "theme": "dark",
-                    "show_progress": True,
-                    "auto_save_settings": True
                 }
             }
             
