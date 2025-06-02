@@ -698,16 +698,28 @@ def show_settings_page():
 
 def show_section_page(section_name, section_values, full_config):
     """Display and handle a specific section's settings"""
-    variables = list(section_values.keys()) if section_values else []
+    # Get initial variables
+    def get_current_variables_and_values():
+        """Get current variables and values from config file"""
+        current_config = load_config()
+        current_section_values = current_config.get(section_name, {})
+        
+        # Get variables list
+        variables = list(current_section_values.keys()) if current_section_values else []
+        
+        # Add default variables if section is empty
+        if not variables:
+            if section_name == "reddit":
+                variables = ["client_id", "client_secret", "username", "password", "user_agent"]
+            elif section_name == "video":
+                variables = ["output_directory", "resolution", "fps"]
+            elif section_name == "text_to_speech":
+                variables = ["service", "voice", "speed", "volume"]
+        
+        return variables, current_section_values
     
-    # Add default variables if section is empty
-    if not variables:
-        if section_name == "reddit":
-            variables = ["client_id", "client_secret", "username", "password", "user_agent"]
-        elif section_name == "video":
-            variables = ["output_directory", "resolution", "fps"]
-        elif section_name == "text_to_speech":
-            variables = ["service", "voice", "speed", "volume"]
+    # Get initial state
+    variables, section_values = get_current_variables_and_values()
     
     selected_option = 0
     max_options = len(variables) + 1  # +1 for back option
@@ -737,7 +749,15 @@ def show_section_page(section_name, section_values, full_config):
                 current_value = section_values.get(variable_name, "")
                 handle_variable_edit(section_name, variable_name, current_value)
                 
-                # Redraw section interface when returning from edit
+                # HOT RELOAD: Refresh variables and values from config
+                variables, section_values = get_current_variables_and_values()
+                max_options = len(variables) + 1  # Update max options in case variables changed
+                
+                # Ensure selected option is still valid
+                if selected_option >= len(variables):
+                    selected_option = len(variables) - 1 if variables else 0
+                
+                # Redraw section interface with updated values
                 menu_start_row = display_section_settings_interface(section_name, selected_option, variables, section_values)
         elif key == b'\x1b':  # ESC key
             return  # Return to main settings
