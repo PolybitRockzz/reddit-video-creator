@@ -2,6 +2,7 @@ import sys
 import msvcrt
 
 from utils import *
+from boot import show_boot_screen
 from pages.create_video import show_create_video_page
 from pages.settings import show_settings_page
 from pages.credits import show_credits_page
@@ -33,6 +34,9 @@ def handle_option_4():
 
 def main():
     """Main program loop"""
+    # Show boot screen first
+    show_boot_screen()
+    
     selected_option = 0
     options = [
         "Create Video",
