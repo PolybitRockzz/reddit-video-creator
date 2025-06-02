@@ -42,8 +42,14 @@ def draw_bottom_border(width):
     print("└" + "─" * (width - 2) + "┘", end="", flush=True)
 
 def center_text(text, width):
-    """Center text within given width"""
-    text_len = len(text)
+    """Center text within given width, accounting for ANSI color codes"""
+    import re
+    
+    # Remove ANSI escape sequences to get the actual display length
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    clean_text = ansi_escape.sub('', text)
+    text_len = len(clean_text)
+    
     if text_len >= width - 2:
         return text[:width-2]
     
@@ -152,23 +158,28 @@ def display_interface_initial(selected_option, options):
     return menu_start_row
 
 def draw_ascii_title():
-    """Draw ASCII art title"""
+    """Draw ASCII art title with colors"""
+    # ANSI color codes
+    orange = "\033[38;5;208m"  # Orange color for "REDDIT"
+    blue = "\033[38;5;39m"     # Blue color for "VIDEO" 
+    green = "\033[38;5;46m"    # Green color for "CREATOR"
+    reset = "\033[0m"          # Reset color
     
     title_lines = [
-        f"██████╗ ███████╗██████╗ ██████╗ ██╗████████╗",
-        f"██╔══██╗██╔════╝██╔══██╗██╔══██╗██║╚══██╔══╝",
-        f"██████╔╝█████╗  ██║  ██║██║  ██║██║   ██║   ",
-        f"██╔══██╗██╔══╝  ██║  ██║██║  ██║██║   ██║   ",
-        f"██║  ██║███████╗██████╔╝██████╔╝██║   ██║   ",
-        f"╚═╝  ╚═╝╚══════╝╚═════╝ ╚═════╝ ╚═╝   ╚═╝   ",
+        f"{orange}██████╗ ███████╗██████╗ ██████╗ ██╗████████╗{reset}    {blue}██╗   ██╗██╗██████╗ ███████╗ ██████╗{reset} ",
+        f"{orange}██╔══██╗██╔════╝██╔══██╗██╔══██╗██║╚══██╔══╝{reset}    {blue}██║   ██║██║██╔══██╗██╔════╝██╔═══██╗{reset}",
+        f"{orange}██████╔╝█████╗  ██║  ██║██║  ██║██║   ██║{reset}       {blue}██║   ██║██║██║  ██║█████╗  ██║   ██║{reset}",
+        f"{orange}██╔══██╗██╔══╝  ██║  ██║██║  ██║██║   ██║{reset}       {blue}╚██╗ ██╔╝██║██║  ██║██╔══╝  ██║   ██║{reset}",
+        f"{orange}██║  ██║███████╗██████╔╝██████╔╝██║   ██║{reset}        {blue}╚████╔╝ ██║██████╔╝███████╗╚██████╔╝{reset}",
+        f"{orange}╚═╝  ╚═╝╚══════╝╚═════╝ ╚═════╝ ╚═╝   ╚═╝{reset}         {blue}╚═══╝  ╚═╝╚═════╝ ╚══════╝ ╚═════╝{reset} ",
         "",
-        f"██╗   ██╗██╗██████╗ ███████╗ ██████╗ ",
-        f"██║   ██║██║██╔══██╗██╔════╝██╔═══██╗",
-        f"██║   ██║██║██║  ██║█████╗  ██║   ██║",
-        f"╚██╗ ██╔╝██║██║  ██║██╔══╝  ██║   ██║",
-        f" ╚████╔╝ ██║██████╔╝███████╗╚██████╔╝",
-        f"  ╚═══╝  ╚═╝╚═════╝ ╚══════╝ ╚═════╝ ",
+        f" {green}██████╗██████╗ ███████╗ █████╗ ████████╗ ██████╗ ██████╗{reset} ",
+        f"{green}██╔════╝██╔══██╗██╔════╝██╔══██╗╚══██╔══╝██╔═══██╗██╔══██╗{reset}",
+        f"{green}██║     ██████╔╝█████╗  ███████║   ██║   ██║   ██║██████╔╝{reset}",
+        f"{green}██║     ██╔══██╗██╔══╝  ██╔══██║   ██║   ██║   ██║██╔══██╗{reset}",
+        f"{green}╚██████╗██║  ██║███████╗██║  ██║   ██║   ╚██████╔╝██║  ██║{reset}",
+        f" {green}╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝{reset}",
         "",
-        "CREATOR v0.1 BETA"
+        "v0.1 BETA"
     ]
     return title_lines
