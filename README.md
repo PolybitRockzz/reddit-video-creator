@@ -1,6 +1,8 @@
 <h1 align="center" style="text-align: center; font-size: 35px; font-weight: 700;">Reddit Video Creator 📱</h1>
 <p align="center" style="text-align: center; font-size: 16px;">am i the asshole for automating this brainrot slop?</p>
 
+![Reddit Video Creator Screenshot](screenshot.png)
+
 > [!IMPORTANT]
 > This script is not a unique idea, by any means. This was originally created by Lewis Menelaws (@CodingWithLewis) as a side project. Check it out <a href="https://github.com/elebumm/RedditVideoMakerBot" target="_blank">here</a>. This project is my interpretation and improvement of the original idea.
 
