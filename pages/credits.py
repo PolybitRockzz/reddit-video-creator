@@ -11,10 +11,13 @@ def show_credits_page():
     
     # Draw top border
     left_border, right_border = draw_border(width, height)
+
+    orange = "\033[38;5;208m"  # Orange color
+    reset = "\033[0m"          # Reset color
     
     # Credits content
     credits_lines = [
-        "CREDITS",
+        f"{orange}CREDITS{reset}",
         "",
         "",
         "GitHub Repository:",
