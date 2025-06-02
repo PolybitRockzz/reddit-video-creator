@@ -163,14 +163,14 @@ def validate_config_file():
             with open(config_path, 'w') as f:
                 toml.dump(default_config, f)
             
-            return True, "Created default config.toml file"
+            return "new_config", "Created default config.toml - Please configure via Settings menu"
         
         # Validate existing config file
         with open(config_path, 'r') as f:
             config = toml.load(f)
         
-        # Check required sections
-        required_sections = ["reddit", "video", "text_to_speech", "processing", "ui"]
+        # Check required sections (simplified check for basic sections)
+        required_sections = ["reddit", "video", "text_to_speech"]
         for section in required_sections:
             if section not in config:
                 return False, f"Missing section '{section}' in config.toml"
@@ -240,9 +240,9 @@ def simulate_boot_process():
     
     # Display the initial interface once
     progress_bar_row, status_text_row, width = display_boot_interface_initial()
-    
-    # Track validation results
+      # Track validation results
     validation_errors = []
+    new_config_created = False
     
     for progress, status, validation_func in validation_stages:
         # Update progress and status
@@ -253,7 +253,13 @@ def simulate_boot_process():
             time.sleep(0.3)  # Brief pause for visual effect
             success, message = validation_func()
             
-            if success:
+            if success == "new_config":
+                # Special case: new config file created
+                new_config_created = True
+                warning_status = f"⚠ {message}"
+                update_boot_progress(progress, warning_status, progress_bar_row, status_text_row, width)
+                time.sleep(1.5)  # Longer pause to let user read the warning
+            elif success:
                 # Show success message briefly
                 success_status = f"✓ {message}"
                 update_boot_progress(progress, success_status, progress_bar_row, status_text_row, width)
@@ -285,6 +291,10 @@ def simulate_boot_process():
         # All validations passed
         update_boot_progress(100, "All systems ready! Press any key to continue...", progress_bar_row, status_text_row, width)
         msvcrt.getch()
+    
+    # Show config warning if a new config was created
+    if new_config_created:
+        show_config_warning()
 
 def show_validation_errors(errors):
     """Display detailed validation errors to the user"""
@@ -335,6 +345,73 @@ def show_validation_errors(errors):
     
     # Display error content
     for line in error_lines:
+        if lines_printed < height - 1:
+            centered_line = center_text(line, width)
+            print(left_border + centered_line + right_border)
+            lines_printed += 1
+    
+    # Fill remaining lines
+    while lines_printed < height - 1:
+        print(left_border + " " * (width - 2) + right_border)
+        lines_printed += 1
+    
+    # Draw bottom border
+    draw_bottom_border(width)
+    show_cursor()
+    msvcrt.getch()
+
+def show_config_warning():
+    """Display a warning about the newly created config file"""
+    clear_screen()
+    hide_cursor()
+    
+    width, height = get_terminal_size()
+    
+    # Draw top border
+    left_border, right_border = draw_border(width, height)
+    
+    yellow = "\033[93m"
+    orange = "\033[38;5;208m"
+    cyan = "\033[96m"
+    reset = "\033[0m"
+    
+    warning_lines = [
+        "",
+        f"{orange}CONFIGURATION NOTICE{reset}",
+        "",
+        f"{yellow}A new config.toml file has been created with default values.{reset}",
+        "",
+        "To use the Reddit Video Creator fully, you need to configure:",
+        "",
+        "• Reddit API credentials (client_id, client_secret)",
+        "• Reddit account details (username, password)",
+        "",
+        f"{yellow}How to configure:{reset}",
+        "1. Go to 'Settings' from the main menu",
+        "2. Update your Reddit API credentials",
+        "3. Customize video and audio preferences",
+        "",
+        f"{yellow}Note: The application will work with limited functionality{reset}",
+        f"{yellow}until you provide valid Reddit API credentials.{reset}",
+        "",
+        "Press any key to continue to the main menu..."
+    ]
+    
+    # Calculate positioning
+    content_height = len(warning_lines)
+    available_lines = height - 2
+    start_line = max(0, (available_lines - content_height) // 2)
+    
+    lines_printed = 1  # Top border already printed
+    
+    # Fill empty lines before content
+    for i in range(start_line):
+        if lines_printed < height - 1:
+            print(left_border + " " * (width - 2) + right_border)
+            lines_printed += 1
+    
+    # Display warning content
+    for line in warning_lines:
         if lines_printed < height - 1:
             centered_line = center_text(line, width)
             print(left_border + centered_line + right_border)
